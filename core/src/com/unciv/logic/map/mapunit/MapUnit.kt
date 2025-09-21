@@ -333,28 +333,28 @@ class MapUnit : IsPartOfGameInfoSerialization {
     val resourceRequirements = Counter<String>()
     val requiredResource = baseUnit.requiredResource ?: return resourceRequirements
 
-    // "Iron : 2" → ["Iron ", " 2"]
-    if (requiredResource.contains(":") && !requiredResource.contains(",")) {
-        val parts = requiredResource.split(":")
+    // 콤마로 여러 자원 분리
+    val resources = requiredResource.split(",")
+    for (res in resources) {
+        val parts = res.split(":")
         if (parts.size == 2) {
-            val resourceName = parts[0].trim()         // "Iron"
-            val resourceAmount = parts[1].trim().toInt() // 2
-            resourceRequirements[resourceName] = resourceAmount
+            // "Iron:2" → ["Iron", "2"]
+            val resourceName = parts[0].trim()
+            val resourceAmount = parts[1].trim().toIntOrNull() ?: 0
+            if (resourceAmount > 0) {
+                resourceRequirements[resourceName] = resourceAmount
+            }
+        } else if (parts.size == 1) {
+            // 숫자 없는 경우 → 기본 1개
+            val resourceName = parts[0].trim()
+            if (resourceName.isNotEmpty()) {
+                resourceRequirements[resourceName] = 1
+            }
         }
-    } else if (!requiredResource.contains(",") && requiredResource.isNotBlank()) {
-        // 콜론도 콤마도 없으면 → 기본 1개만 필요
-        resourceRequirements[requiredResource.trim()] = 1
     }
 
     return resourceRequirements
 }
-
-
-        
-        for (unique in getMatchingUniques(UniqueType.ConsumesResources, cache.state))
-            resourceRequirements.add(unique.params[1], unique.params[0].toInt())
-        return resourceRequirements
-    }
 
     @Readonly
     fun requiresResource(resource: String): Boolean {
