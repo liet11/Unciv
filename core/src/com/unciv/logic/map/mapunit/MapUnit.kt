@@ -330,8 +330,27 @@ class MapUnit : IsPartOfGameInfoSerialization {
      * StateForConditionals is assumed to regarding this mapUnit*/
     @Readonly
     fun getResourceRequirementsPerTurn(): Counter<String> {
-        val resourceRequirements = Counter<String>()
-        if (baseUnit.requiredResource != null) resourceRequirements[baseUnit.requiredResource!!] = 1
+    val resourceRequirements = Counter<String>()
+    val requiredResource = baseUnit.requiredResource ?: return resourceRequirements
+
+    // "Iron : 2" → ["Iron ", " 2"]
+    if (requiredResource.contains(":") && !requiredResource.contains(",")) {
+        val parts = requiredResource.split(":")
+        if (parts.size == 2) {
+            val resourceName = parts[0].trim()         // "Iron"
+            val resourceAmount = parts[1].trim().toInt() // 2
+            resourceRequirements[resourceName] = resourceAmount
+        }
+    } else if (!requiredResource.contains(",") && requiredResource.isNotBlank()) {
+        // 콜론도 콤마도 없으면 → 기본 1개만 필요
+        resourceRequirements[requiredResource.trim()] = 1
+    }
+
+    return resourceRequirements
+}
+
+
+        
         for (unique in getMatchingUniques(UniqueType.ConsumesResources, cache.state))
             resourceRequirements.add(unique.params[1], unique.params[0].toInt())
         return resourceRequirements
