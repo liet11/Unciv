@@ -367,12 +367,9 @@ class MapUnit : IsPartOfGameInfoSerialization {
         return false
     }
 
+var movementCooldownRemaining: Int = 0
 
-
-
-
-    var movementCooldownRemaining: Int = 0
-
+    
 fun canMove(): Boolean {
     if (baseUnit.movementCooldown > 0) {
         return movementCooldownRemaining == 0 && currentMovement > 0
