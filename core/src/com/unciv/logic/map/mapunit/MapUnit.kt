@@ -368,7 +368,7 @@ class MapUnit : IsPartOfGameInfoSerialization {
     @Readonly fun hasMovement() = currentMovement > 0
 
     @Readonly
-    fun getMaxMovement(ignoreOtherUnit: Boolean = false): Int {
+    fun getMaxMovement(ignoreOtherUnit: Boolean = false): Float {
         var movement =
                 if (isEmbarked()) 2
                 else baseUnit.movement
@@ -396,9 +396,10 @@ class MapUnit : IsPartOfGameInfoSerialization {
 
     @Readonly
     fun hasUnitMovedThisTurn(): Boolean {
-        val max = getMaxMovement().toFloat()
-        return currentMovement < max - max.ulp
-    }
+    val cap = if (baseUnit.movement < 1f) 1f else getMaxMovement().toFloat()
+    return currentMovement < cap - cap.ulp
+}
+
 
     /**
      * Determines this (land or sea) unit's current maximum vision range from unit properties, civ uniques and terrain.
@@ -406,7 +407,7 @@ class MapUnit : IsPartOfGameInfoSerialization {
      */
     @Readonly
     fun getVisibilityRange(): Int {
-        var visibilityRange = 2
+        var visibilityRange = 1
 
         val conditionalState = cache.state
 
