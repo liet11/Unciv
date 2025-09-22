@@ -367,36 +367,7 @@ class MapUnit : IsPartOfGameInfoSerialization {
         return false
     }
 
-var movementCooldownRemaining: Int = 0
 
-    
-fun canMove(): Boolean {
-    if (baseUnit.movementCooldown > 0) {
-        return movementCooldownRemaining == 0 && currentMovement > 0
-    }
-    return currentMovement > 0
-}
-
-fun moveToTile(target: Tile) {
-    if (!canMove()) return
-    // 기존 이동 처리
-    currentTile = target
-    currentMovement = 0
-
-    // 쿨타임 적용 (쿨타임이 설정된 유닛만)
-    if (baseUnit.movementCooldown > 0) {
-        movementCooldownRemaining = baseUnit.movementCooldown
-    }
-}
-
-fun onNewTurn() {
-    if (movementCooldownRemaining > 0) movementCooldownRemaining--
-    currentMovement = getMaxMovement()
-}
-
-
-
-    
 
     @Readonly fun hasMovement() = currentMovement > 0
 
