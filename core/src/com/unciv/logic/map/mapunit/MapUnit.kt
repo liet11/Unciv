@@ -396,7 +396,7 @@ class MapUnit : IsPartOfGameInfoSerialization {
 
     @Readonly
     fun hasUnitMovedThisTurn(): Boolean {
-    val cap = if (baseUnit.movement < 1f) 1f else getMaxMovement().toFloat()
+    val cap = if (baseUnit.movement < 1f) 1f else getMaxMovement()
     return currentMovement < cap - cap.ulp
 }
 
@@ -801,7 +801,7 @@ class MapUnit : IsPartOfGameInfoSerialization {
         currentMovement -= amount
         if (currentMovement < 0) currentMovement = 0f
         if (amount < 0) {
-            val maxMovement = getMaxMovement().toFloat()
+            val maxMovement = getMaxMovement()
             if (currentMovement > maxMovement) currentMovement = maxMovement
         }
     }
