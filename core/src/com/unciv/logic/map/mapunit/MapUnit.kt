@@ -374,7 +374,7 @@ class MapUnit : IsPartOfGameInfoSerialization {
                 else baseUnit.movement
 
         movement += getMatchingUniques(UniqueType.Movement, checkCivInfoUniques = true)
-                .sumOf { it.params[0].toInt() }
+                .sumOf { it.params[0].toFloat() }
 
         if (movement < 1) movement = 1
 
