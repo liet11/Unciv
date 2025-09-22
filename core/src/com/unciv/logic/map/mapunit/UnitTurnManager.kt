@@ -12,6 +12,10 @@ class UnitTurnManager(val unit: MapUnit) {
         for (unique in unit.getTriggeredUniques(UniqueType.TriggerUponTurnEnd))
             UniqueTriggerActivation.triggerUnique(unique, unit)
 
+        if (movementCooldown > 0) {
+            movementCooldown -= 1
+        }
+
         if (unit.hasMovement()
                 && unit.getTile().improvementInProgress != null
                 && unit.canBuildImprovement(unit.getTile().getTileImprovementInProgress()!!)
