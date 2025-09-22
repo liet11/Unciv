@@ -39,6 +39,9 @@ import kotlin.math.ulp
  */
 class MapUnit : IsPartOfGameInfoSerialization {
 
+
+    var movementCooldown: Int = 0
+
     //region Persisted fields
 
     /** civName owning the unit */
