@@ -45,7 +45,11 @@ class BaseUnit : RulesetObject(), INonPerpetualConstruction {
     var range: Int = 2
     var interceptRange = 0
     var unitType: String = ""
+    var movementCooldown: Int = 0
+    var movementCooldownRemaining: Int = 0
 
+    
+    
     val type by lazy { ruleset.unitTypes[unitType]
         ?: throw Exception("Unit $name has unit type $unitType which is not present in ruleset!") }
     override var requiredTech: String? = null
