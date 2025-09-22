@@ -410,7 +410,7 @@ class MapUnit : IsPartOfGameInfoSerialization {
      */
     @Readonly
     fun getVisibilityRange(): Int {
-        var visibilityRange = 2
+        var visibilityRange = 1
 
         val conditionalState = cache.state
 
@@ -800,6 +800,8 @@ class MapUnit : IsPartOfGameInfoSerialization {
 
     /** Can accept a negative number to gain movement points */
     fun useMovementPoints(amount: Float) {
+        if (movementCooldown==0)
+        {
         turnsFortified = 0
         currentMovement -= amount
         if (currentMovement < 0) currentMovement = 0f
@@ -807,8 +809,12 @@ class MapUnit : IsPartOfGameInfoSerialization {
             val maxMovement = getMaxMovement().toFloat()
             if (currentMovement > maxMovement) currentMovement = maxMovement
         }
+        if(baseUnit.moveCooldown != null) {
+            movementCooldown = baseUnit.movementCooldown
+        }
     }
-
+    }
+    
     fun fortify() {
         action = "Fortify"
     }
