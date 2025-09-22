@@ -40,7 +40,7 @@ import kotlin.math.ulp
 class MapUnit : IsPartOfGameInfoSerialization {
 
 
-    var movementCooldown: Int = 0
+    var movementCooldown: Int? = null
 
     //region Persisted fields
 
