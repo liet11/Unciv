@@ -7,7 +7,7 @@ import com.unciv.models.ruleset.unique.UniqueType
 class UnitTurnManager(val unit: MapUnit) {
 
 
-    val movementCooldown = unit.movementCooldown
+    var movementCooldown = unit.movementCooldown? = 0
 
     fun endTurn() {
         unit.movement.clearPathfindingCache()
