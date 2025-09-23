@@ -803,20 +803,25 @@ class MapUnit : IsPartOfGameInfoSerialization {
 
     /** Can accept a negative number to gain movement points */
     fun useMovementPoints(amount: Float) {
-        if (movementCooldown==0)
-        {
+    if (movementCooldown == 0) {
         turnsFortified = 0
+
         currentMovement -= amount
-        if (currentMovement < 0) currentMovement = 0f
+        val maxMovement = getMaxMovement().toFloat()
+
         if (amount < 0) {
-            val maxMovement = getMaxMovement().toFloat()
-            if (currentMovement > maxMovement) currentMovement = maxMovement
-        }
-        if(baseUnit.movementCooldown != null) {
-            movementCooldown = baseUnit.movementCooldown
+            // 회복일 때: 최대치 초과 방지
+            currentMovement = currentMovement.coerceAtMost(maxMovement)
+        } else {
+            // 소모일 때: 최소치/쿨다운 적용
+            if (currentMovement <= 0f) {
+                currentMovement = 0f
+                movementCooldown = baseUnit.movementCooldown ?: 0
+            }
         }
     }
-    }
+}
+
     
     fun fortify() {
         action = "Fortify"
