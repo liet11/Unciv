@@ -7,7 +7,7 @@ import com.unciv.models.ruleset.unique.UniqueType
 class UnitTurnManager(val unit: MapUnit) {
 
 
-    var movementCooldown = unit.movementCooldown? = 0
+    var movementCooldown = unit.movementCooldown? : 0
 
     fun endTurn() {
         unit.movement.clearPathfindingCache()
@@ -16,7 +16,7 @@ class UnitTurnManager(val unit: MapUnit) {
             UniqueTriggerActivation.triggerUnique(unique, unit)
 
         if (movementCooldown > 0) {
-            movementCooldown -= 1
+            movementCooldown = movementCooldown-1
         }
 
         if (unit.hasMovement()
