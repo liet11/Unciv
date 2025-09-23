@@ -7,18 +7,19 @@ import com.unciv.models.ruleset.unique.UniqueType
 class UnitTurnManager(val unit: MapUnit) {
 
 
-    var movementCooldown: Float = (unit.movementCooldown ?: 0).toFloat()
+    // nullable Int → Float 안전 변환
+var movementCooldown: Float = (unit.movementCooldown ?: 0).toFloat()
 
+fun endTurn() {
+    unit.movement.clearPathfindingCache()
 
-    fun endTurn() {
-        unit.movement.clearPathfindingCache()
+    for (unique in unit.getTriggeredUniques(UniqueType.TriggerUponTurnEnd))
+        UniqueTriggerActivation.triggerUnique(unique, unit)
 
-        for (unique in unit.getTriggeredUniques(UniqueType.TriggerUponTurnEnd))
-            UniqueTriggerActivation.triggerUnique(unique, unit)
-    
-        if (movementCooldown > 0f) {
-            movementCooldown -= 1f
-        }
+    // 테스트에서 기대하는 값과 일치하도록 로직 재검토
+    movementCooldown = maxOf(0f, movementCooldown - 1f)
+}
+
 
         if (unit.hasMovement()
                 && unit.getTile().improvementInProgress != null
