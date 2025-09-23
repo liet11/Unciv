@@ -803,16 +803,31 @@ class MapUnit : IsPartOfGameInfoSerialization {
 
     /** Can accept a negative number to gain movement points */
     fun useMovementPoints(amount: Float) {
-        turnsFortified = 0
-        if(movementCooldown>0) movementCooldown = (movementCooldown ?: 0) - 1
-        currentMovement -= amount
-        if (currentMovement < 0) currentMovement = 0f
-        if (amount < 0) {
-            val maxMovement = getMaxMovement().toFloat()
-            if (currentMovement > maxMovement) currentMovement = maxMovement
-        }
-        if (movementCooldown == 0 && baseUnit.movementCooldown != 0 && currentMovement<=0f) movementCooldown = baseUnit.movementCooldown
+    // 요새화 해제
+    turnsFortified = 0
+
+    // movementCooldown이 null일 수 있으므로 기본값 0으로 초기화
+    if (movementCooldown == null) movementCooldown = 0
+
+    // 쿨다운이 있으면 1턴 차감
+    if (movementCooldown!! > 0) movementCooldown = movementCooldown!! - 1
+
+    // 이동력 소모
+    currentMovement -= amount
+    if (currentMovement < 0f) currentMovement = 0f
+
+    // 이동력 회복 처리 (amount < 0)
+    if (amount < 0f) {
+        val maxMovement = getMaxMovement().toFloat()
+        if (currentMovement > maxMovement) currentMovement = maxMovement
     }
+
+    // 이동력을 모두 소모했고, 아직 쿨다운이 없는 경우 쿨다운 설정
+    if (currentMovement <= 0f && movementCooldown == 0 && baseUnit.movementCooldown != 0) {
+        movementCooldown = baseUnit.movementCooldown
+    }
+}
+
     
     fun fortify() {
         action = "Fortify"
