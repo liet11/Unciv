@@ -814,6 +814,7 @@ class MapUnit : IsPartOfGameInfoSerialization {
             && baseUnit.movementCooldown != null 
             && movementCooldown == 0)
         {movementCooldown = baseUnit.movementCooldown}
+        if (movementCooldown > 0) movementCooldown -= 1
     }
     
     fun fortify() {
