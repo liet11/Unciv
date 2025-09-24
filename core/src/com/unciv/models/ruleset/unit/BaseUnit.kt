@@ -481,12 +481,24 @@ class BaseUnit : RulesetObject(), INonPerpetualConstruction {
 
     /** Returns resource requirements from both uniques and requiredResource field */
     override fun getResourceRequirementsPerTurn(state: GameContext?): Counter<String> {
-        val resourceRequirements = Counter<String>()
-        if (requiredResource != null) resourceRequirements[requiredResource!!] = 1
-        for (unique in getMatchingUniques(UniqueType.ConsumesResources, state ?: GameContext.EmptyState))
-            resourceRequirements.add(unique.params[1], unique.params[0].toInt())
-        return resourceRequirements
+    val resourceRequirements = Counter<String>()
+
+    // 기존 requiredResource 처리
+    if (requiredResource != null) {
+        val parts = requiredResource!!.split(":")
+        val resourceName = parts[0].trim()
+        val resourceAmount = if (parts.size > 1) parts[1].trim().toIntOrNull() ?: 1 else 1
+        resourceRequirements[resourceName] = resourceAmount
     }
+
+    // 유니크에서 자원 소모 처리
+    for (unique in getMatchingUniques(UniqueType.ConsumesResources, state ?: GameContext.EmptyState)) {
+        resourceRequirements.add(unique.params[1], unique.params[0].toInt())
+    }
+
+    return resourceRequirements
+}
+
 
 
     @Readonly fun isRanged() = rangedStrength > 0
