@@ -804,19 +804,13 @@ class MapUnit : IsPartOfGameInfoSerialization {
     /** Can accept a negative number to gain movement points */
     fun useMovementPoints(amount: Float) {
         turnsFortified = 0
-        if(movementCooldown>0) movementCooldown = (movementCooldown ?: 0) - 1
         currentMovement -= amount
         if (currentMovement < 0) currentMovement = 0f
-        
-        if (movementCooldown == 0 
-            && baseUnit.movementCooldown != 0 
-            && currentMovement<=0f)
-        {movementCooldown = baseUnit.movementCooldown}
-        
         if (amount < 0) {
             val maxMovement = getMaxMovement().toFloat()
             if (currentMovement > maxMovement) currentMovement = maxMovement
         }
+        if (movementCooldown == 0 && baseUnit.movementCooldown != null && currentMovement<=0f) movementCooldown = baseUnit.movementCooldown
     }
 
     
