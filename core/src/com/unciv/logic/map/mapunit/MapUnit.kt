@@ -413,7 +413,7 @@ class MapUnit : IsPartOfGameInfoSerialization {
      */
     @Readonly
     fun getVisibilityRange(): Int {
-        var visibilityRange = 1
+        var visibilityRange = 2
 
         val conditionalState = cache.state
 
