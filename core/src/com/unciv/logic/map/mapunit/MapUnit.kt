@@ -810,6 +810,10 @@ class MapUnit : IsPartOfGameInfoSerialization {
             val maxMovement = getMaxMovement().toFloat()
             if (currentMovement > maxMovement) currentMovement = maxMovement
         }
+        if (currentmovement <= 0f 
+            && baseUnit.movementCooldown != null 
+            && movementCooldown == 0)
+        {movementCooldown = baseUnit.movementCooldown}
     }
     
     fun fortify() {
